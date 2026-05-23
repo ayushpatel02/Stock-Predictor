@@ -12,6 +12,7 @@ Outputs:
     models/{SYMBOL}.pkl for each successfully trained symbol.
     Summary table printed to stdout.
 """
+from __future__ import annotations
 
 import argparse
 import logging

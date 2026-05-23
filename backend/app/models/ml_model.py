@@ -16,6 +16,7 @@ Design choices:
     - Feature list is explicit (FEATURE_COLS constant) so the saved bundle
       always knows which columns to expect.
 """
+from __future__ import annotations
 
 import logging
 import os

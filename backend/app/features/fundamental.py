@@ -4,6 +4,7 @@ Currently normalises raw yfinance .info fields into model-ready scalars.
 These features are not yet wired into the ML model (see FEATURE_COLS in ml_model.py)
 but the extraction logic is ready for the next phase.
 """
+from __future__ import annotations
 
 import logging
 from typing import Any

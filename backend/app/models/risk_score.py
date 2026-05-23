@@ -3,6 +3,7 @@ Risk scoring: combines ATR%, beta, and debt-to-equity into a 1-10 risk score.
 Higher = riskier. The score is computed from the latest available data,
 not from predictions — it represents intrinsic stock risk, not directional risk.
 """
+from __future__ import annotations
 
 import logging
 

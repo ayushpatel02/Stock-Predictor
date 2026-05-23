@@ -2,6 +2,7 @@
 In-memory cache layer with optional Redis backend.
 Falls back to a simple dict cache when Redis is unavailable.
 """
+from __future__ import annotations
 
 import json
 import logging
