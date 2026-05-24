@@ -1,0 +1,47 @@
+name: Daily Data Refresh
+
+on:
+  schedule:
+    # 4:30 PM IST = 11:00 UTC, weekdays Monday-Friday
+    - cron: '0 11 * * 1-5'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  refresh:
+    name: Refresh Data & Retrain (Sunday only)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Refresh market data
+        run: python -m app.scripts.refresh_data
+        env:
+          DATABASE_URL: sqlite:///./stock_predictor.db
+
+      # Retrain weekly (Sunday — cron day 0)
+      - name: Retrain models (Sunday only)
+        if: github.event_name == 'workflow_dispatch' || (github.event_name == 'schedule' && contains('0', format('{0}', github.event.schedule)))
+        run: python -m app.scripts.train_all
+        env:
+          DATABASE_URL: sqlite:///./stock_predictor.db
+
+      - name: Upload model artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: trained-models
+          path: backend/models/*.pkl
+          retention-days: 7
+        continue-on-error: true

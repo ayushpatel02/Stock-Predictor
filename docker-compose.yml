@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - '8000:8000'
+    environment:
+      - DATABASE_URL=sqlite:///./stock_predictor.db
+      - MODELS_DIR=/app/models
+      # Uncomment for Postgres:
+      # DATABASE_URL=postgresql://postgres:postgres@db:5432/stockpredictor
+      # Uncomment for Redis:
+      # REDIS_URL=redis://redis:6379/0
+    volumes:
+      - models_data:/app/models
+      - ./backend/app:/app/app  # hot-reload in dev; remove in prod
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000/']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Optional Postgres — uncomment to use
+  # db:
+  #   image: postgres:16-alpine
+  #   environment:
+  #     POSTGRES_DB: stockpredictor
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #   volumes:
+  #     - pg_data:/var/lib/postgresql/data
+  #   ports:
+  #     - '5432:5432'
+
+  # Optional Redis — uncomment to use
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - '6379:6379'
+
+volumes:
+  models_data:
+  # pg_data:
