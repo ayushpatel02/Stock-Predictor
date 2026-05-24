@@ -1,0 +1,6 @@
+/* Global layout overrides */
+#root {
+  min-height: 100vh;
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
